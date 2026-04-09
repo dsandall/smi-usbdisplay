@@ -1,0 +1,10 @@
+# Silicon Motion USB Display (090c:0768)
+ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", \
+ ATTR{idVendor}=="090c", IMPORT{builtin}="usb_id", \
+ ATTR{bDeviceClass}=="ef", \
+ ENV{SMIUSBDISPLAY_DEVNAME}="$env{DEVNAME}", \
+ ENV{SMIUSBDISPLAY_DEVICE_ID}="$env{ID_BUS}-$env{BUSNUM}-$env{DEVNUM}-$env{ID_SERIAL}", \
+ RUN+="/opt/siliconmotion/smi-udev.sh add $root $env{SMIUSBDISPLAY_DEVICE_ID} $env{SMIUSBDISPLAY_DEVNAME}"
+
+ACTION=="remove", env{DEVNAME}!="", \
+ ENV{PRODUCT}=="90c/*", RUN+="/opt/siliconmotion/smi-udev.sh remove $root $env{DEVNAME}"

@@ -1,0 +1,25 @@
+post_install() {
+  systemctl daemon-reload
+  modprobe evdi 2>/dev/null || true
+  udevadm control --reload-rules
+  udevadm trigger --action=add --attr-match=idVendor=090c
+  echo ":: Enable the service to start on boot:"
+  echo "   systemctl enable smiusbdisplay.service"
+  echo ":: Or start it now:"
+  echo "   systemctl start smiusbdisplay.service"
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  systemctl stop smiusbdisplay.service 2>/dev/null || true
+  systemctl disable smiusbdisplay.service 2>/dev/null || true
+}
+
+post_remove() {
+  systemctl daemon-reload
+  udevadm control --reload-rules
+  udevadm trigger
+}

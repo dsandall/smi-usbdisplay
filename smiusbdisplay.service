@@ -1,0 +1,13 @@
+[Unit]
+Description=SiliconMotion Driver Service
+After=display-manager.service
+
+[Service]
+ExecStartPre=/sbin/modprobe evdi
+ExecStart=/opt/siliconmotion/SMIUSBDisplayManager
+Restart=always
+WorkingDirectory=/opt/siliconmotion
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
