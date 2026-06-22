@@ -1,0 +1,39 @@
+name: Publish to AUR
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - PKGBUILD
+      - .SRCINFO
+      - smiusbdisplay.service
+      - 99-smiusbdisplay.rules
+      - smi-udev.sh
+      - 20-smi.conf
+      - smi-usbdisplay.install
+      - .github/workflows/publish-aur.yml
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        with:
+          pkgname: smi-usbdisplay
+          pkgbuild: ./PKGBUILD
+          assets: |
+            smiusbdisplay.service
+            99-smiusbdisplay.rules
+            smi-udev.sh
+            20-smi.conf
+            smi-usbdisplay.install
+          commit_username: thebu
+          commit_email: thebudman6@proton.me
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: "Sync from GitHub ${{ github.sha }}"
+          ssh_keyscan_types: rsa,ecdsa,ed25519
